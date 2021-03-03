@@ -24,8 +24,7 @@ def main():
 
   symbols_being = bs.Bits(length= 256)
 
-  #code = 
-  make_canonic(code.keys(), lenghts)
+  code = make_canonic(code.keys(), lenghts)
 
   for s in code:
     mask = bs.Bits(uint= 1, length= 256) << int.from_bytes(s, byteorder='big')
@@ -130,28 +129,11 @@ def make_canonic (list_symbols, lenghts):
   root = tr.create_tree_root()
 
   for x in lenghts:
-    node = root
-    '''for i in range(x):
-
-      if not node.have_children:
-        node.create_children()
-      
-      if (not node.l_node.used) and not (x <= (node.value.len + 1) and node.l_node.using):
-        node = node.l_node
-
-      elif not node.r_node.used and not (x <= (node.value.len + 1) and node.r_node.using):
-        node = node.r_node
-
-      else:
-        i -= 1
-        break
-    print(node.value, node.using)'''
-    node = node.search(x)
+    node = root.search(x)
     canonic_code.append(node.value)
     node.close_node()
     
   print(lenghts)
-
   print(canonic_code)
   #if root.used: print('Sucesso')
 
