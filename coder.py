@@ -110,7 +110,6 @@ def write_code (f_read, f_write, code):
       buffer += code[byte]
       if buffer.len % 8 == 0:
         buffer = bs.Bits(bin='0b')
-
       byte = f_read.read(1)
   
   print('Terminei o arquivo')
