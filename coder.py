@@ -5,7 +5,7 @@ def main():
 
   try:
     f = open(file_name, 'rb')
-    symbols = get_prob(f)
+    symbols, n_bytes = get_prob(f)
   
   except OSError as ose:
     print(ose)
@@ -28,24 +28,26 @@ def main():
     symbols_being = symbols_being | mask
 
   #print(symbols_being.bin)
-  print(lenghts)
+  print(len(lenghts))
   #print(map(lambda x: 255 - x, bs.Bits('0b100').findall('0b1', bytealigned=True)))
 
   try:
-    f2 = open(file_name[:-4] + 'v2' + file_name[-4:], 'wb')
-    f1 = open(file_name, 'rb')
+    f_write = open(file_name[:-4] + 'v2.b', 'wb')
+    f_read = open(file_name, 'rb')
 
-    f2.write()
-    f2.write(header.tobytes())
-    f2.write(symbols_being.tobytes())
-    f2.write(lenghts)
+    f_write.write(header.tobytes())
+    f_write.write(symbols_being.tobytes())
+    f_write.write(lenghts)
+
+    write_code(f_read, f_write, code)
 
 
   finally:
-    f2.close()
-    f1.close()
+    f_write.close()
+    f_read.close()
 
-  print(code, symbols)
+  print(len(code), len(symbols))
+  print(n_bytes)
 
 
 def get_prob(f):
@@ -67,7 +69,7 @@ def get_prob(f):
 
   symbols = {key: value/n_bytes for key, value in symbols.items()} #Dividindo todos os valores pelo total
 
-  return symbols
+  return symbols, n_bytes
 
 def create_code(symbols):
 
@@ -98,6 +100,20 @@ def create_code(symbols):
       code[s] = bs.Bits(bin='0b1') + code[s]
 
   return code
+
+def write_code (f_read, f_write, code):
+
+  buffer = bs.Bits(bin='0b')
+  byte = f_read.read(1)
+
+  while byte:
+      buffer += code[byte]
+      if buffer.len % 8 == 0:
+        buffer = bs.Bits(bin='0b')
+
+      byte = f_read.read(1)
+  
+  print('Terminei o arquivo')
 
 if __name__ == "__main__":
   main()
