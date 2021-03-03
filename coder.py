@@ -115,11 +115,11 @@ def write_code (f_read, f_write, code):
   buffer = bs.Bits(bin='0b')
   byte = f_read.read(1)
 
-  while byte:
+  '''while byte:
       buffer += code[byte]
       if buffer.len % 8 == 0:
         buffer = bs.Bits(bin='0b')
-      byte = f_read.read(1)
+      byte = f_read.read(1)'''
   
   print('Terminei o arquivo')
 
@@ -131,26 +131,31 @@ def make_canonic (list_symbols, lenghts):
 
   for x in lenghts:
     node = root
-    for i in range(x):
+    '''for i in range(x):
+
       if not node.have_children:
         node.create_children()
       
-      if not node.l_node.used:
+      if (not node.l_node.used) and not (x <= (node.value.len + 1) and node.l_node.using):
         node = node.l_node
-      elif not node.r_node.used:
+
+      elif not node.r_node.used and not (x <= (node.value.len + 1) and node.r_node.using):
         node = node.r_node
-      else: 
-        print('Isso não deve ocorrer.')
+
+      else:
+        i -= 1
         break
+    print(node.value, node.using)'''
+    node = node.search(x)
     canonic_code.append(node.value)
     node.close_node()
     
   print(lenghts)
 
   print(canonic_code)
-  if root.used: print('Sucesso')
+  #if root.used: print('Sucesso')
 
-  #return {key: value for key, value in zip(list_symbols, canonic_code)}
+  return {key: value for key, value in zip(list_symbols, canonic_code)}
 
 if __name__ == "__main__":
   main()
