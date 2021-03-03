@@ -1,5 +1,9 @@
 import bitstring as bs
 
+def create_tree_root(value= bs.Bits(bin='0b'), parent= None):
+  return Node(value, parent)
+
+'''
 class BinTree:
   def __init__(self):
     self.l_node = Node(bs.Bits(bin='0b0'), self)
@@ -7,6 +11,7 @@ class BinTree:
   
   def close_node(self):
     pass
+'''
 
 #Espera value do tipo bs.Bits
 class Node:
@@ -16,11 +21,11 @@ class Node:
     self.l_node = None
     self.r_node = None
     self.have_children = False
-    self.p_node = parent
+    self.parent = parent
   
-  def create_nodes(self):
-    self.l_node = Node(value + bs.Bits(bin='0b0'), self)
-    self.r_node = Node(value + bs.Bits(bin='0b1'), self)
+  def create_children(self):
+    self.l_node = Node(self.value + bs.Bits(bin='0b0'), self)
+    self.r_node = Node(self.value + bs.Bits(bin='0b1'), self)
     self.have_children = True
 
   def close_node(self):
