@@ -1,5 +1,6 @@
 import bitstring as bs
 import tree as tr
+import time
 
 def main():
   file_name = input('Write your file name: ')
@@ -111,16 +112,32 @@ def create_code(symbols):
 
 def write_code (f_read, f_write, code):
 
-  buffer = bs.Bits(bin='0b')
-  byte = f_read.read(1)
 
-  '''while byte:
-      buffer += code[byte]
-      if buffer.len % 8 == 0:
+  start = time.time()
+  buffer = bs.Bits(bin='0b')
+  _bytes = f_read.read(1000)
+  print(_bytes)
+  print(code)
+  print('Enconding... (this may take a while)')
+
+  while _bytes:
+    for b in _bytes:
+      #print (b)
+      buffer = buffer + code[b.to_bytes(1,byteorder= 'big')]
+    if buffer.len >= 8000: # 1000 bytes
+      if buffer.len % 8 != 0:
+        buffer = buffer.cut(buffer.len % 8)
+      else:
         buffer = bs.Bits(bin='0b')
-      byte = f_read.read(1)'''
+
+    if len(_bytes) < 1000: break
+    #print(_bytes)
+    _bytes = f_read.read(1000)
+    
   
-  print('Terminei o arquivo')
+  end = time.time()
+  print('Demorou: {} segundos'.format(end - start))
+  print(buffer)
 
 def make_canonic (list_symbols, lenghts):
   canonic_code = []
