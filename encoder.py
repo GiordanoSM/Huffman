@@ -6,7 +6,7 @@ def main():
   file_name = input('Write your file name: ')
 
   try:
-    f = open(file_name, 'rb')
+    f = open('arquivos/' + file_name, 'rb')
     symbols, n_bytes = get_prob(f)
   
   except OSError as ose:
@@ -20,32 +20,33 @@ def main():
 
   header = bs.Bits(hex='0xF0') #Header sendo F + numero de bits de padding no final do arquivo
 
-  lenghts = [value.len for key, value in sorted(code.items(),key= lambda x: x[0])]
-  lenghts = b''.join(list(map(lambda x: x.to_bytes(1, byteorder= 'big'), lenghts)))
+  lengths = [value.len for key, value in sorted(code.items(),key= lambda x: x[0])]
+  lengths = b''.join(list(map(lambda x: x.to_bytes(1, byteorder= 'big'), lengths)))
 
   symbols_being = bs.Bits(length= 256)
 
-  code = make_canonic(code.keys(), lenghts)
+  code = tr.make_tree_code(code.keys(), lengths)
 
   for s in code:
     mask = bs.Bits(uint= 1, length= 256) << int.from_bytes(s, byteorder='big')
     symbols_being = symbols_being | mask
 
   #print(symbols_being.bin)
-  print(len(lenghts))
+  print('Número de símbolos: {}'.format(len(lengths)))
+  print('Probabilidades: {}'.format(symbols))
   #print(map(lambda x: 255 - x, bs.Bits('0b100').findall('0b1', bytealigned=True)))
 
   try:
-    f_write = open(file_name[:-4] + 'v2.b', 'wb')
-    f_read = open(file_name, 'rb')
+    f_write = open('arquivos/' + file_name + '.b', 'wb')
+    f_read = open('arquivos/' + file_name, 'rb')
 
     f_write.write(header.tobytes())
     f_write.write(symbols_being.tobytes())
-    f_write.write(lenghts)
+    f_write.write(lengths)
 
     padding = write_code(f_read, f_write, code) #Texto codificado
 
-    print((header[:4] + padding).tobytes())
+    print('Header: {}'.format((header[:4] + padding).tobytes()))
 
     f_write.seek(0)
     f_write.write((header[:4] + padding).tobytes()) #Insere a quantidade final de padding no cabeçalho
@@ -56,8 +57,8 @@ def main():
 
   #compress_info()
 
-  print(len(code), len(symbols))
-  print(n_bytes)
+  #print(len(code), len(symbols))
+  print('Tamanho do original em bytes: {}'.format(n_bytes))
 
 #--------------------------------------------------------------------
 
@@ -123,7 +124,7 @@ def write_code (f_read, f_write, code):
   buffer = bs.Bits(bin='0b')
   _bytes = f_read.read(1000)
   #print(_bytes)
-  print(code)
+  print('Code used: {}'.format(code))
   print('Enconding... (this may take a while)')
 
   while _bytes:
@@ -146,26 +147,9 @@ def write_code (f_read, f_write, code):
 
   end = time.time()
   print('Demorou: {} segundos'.format(end - start))
-  print(buffer)
+  #print(buffer)
 
   return bs.Bits(int= buffer.len % 8, length= 4)
-
-def make_canonic (list_symbols, lenghts):
-  canonic_code = []
-  list_symbols = sorted(list_symbols)
-
-  root = tr.create_tree_root()
-
-  for x in lenghts:
-    node = root.search(x)
-    canonic_code.append(node.value)
-    node.close_node()
-    
-  print(lenghts)
-  print(canonic_code)
-  #if root.used: print('Sucesso')
-
-  return {key: value for key, value in zip(list_symbols, canonic_code)}
 
 if __name__ == "__main__":
   main()

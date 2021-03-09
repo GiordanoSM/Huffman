@@ -54,4 +54,19 @@ class Node:
       return final_node
 
 
+def make_tree_code (list_symbols, lengths):
+  tree_code = []
+  list_symbols = sorted(list_symbols)
 
+  root = create_tree_root()
+
+  for x in lengths:
+    node = root.search(x)
+    tree_code.append(node.value)
+    node.close_node()
+    
+  #print(lengths)
+  #print(canonic_code)
+  #if root.used: print('Sucesso')
+
+  return {key: value for key, value in zip(list_symbols, tree_code)}
