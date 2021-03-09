@@ -43,12 +43,18 @@ def main():
     f_write.write(symbols_being.tobytes())
     f_write.write(lenghts)
 
-    write_code(f_read, f_write, code)
+    padding = write_code(f_read, f_write, code) #Texto codificado
 
+    print((header[:4] + padding).tobytes())
+
+    f_write.seek(0)
+    f_write.write((header[:4] + padding).tobytes()) #Insere a quantidade final de padding no cabeçalho
 
   finally:
     f_write.close()
     f_read.close()
+
+  #compress_info()
 
   print(len(code), len(symbols))
   print(n_bytes)
@@ -116,7 +122,7 @@ def write_code (f_read, f_write, code):
   start = time.time()
   buffer = bs.Bits(bin='0b')
   _bytes = f_read.read(1000)
-  print(_bytes)
+  #print(_bytes)
   print(code)
   print('Enconding... (this may take a while)')
 
@@ -126,18 +132,23 @@ def write_code (f_read, f_write, code):
       buffer = buffer + code[b.to_bytes(1,byteorder= 'big')]
     if buffer.len >= 8000: # 1000 bytes
       if buffer.len % 8 != 0:
-        buffer = buffer.cut(buffer.len % 8)
+        f_write.write(buffer.tobytes()[:-1])
+        buffer = bs.Bits(bin='0b') + buffer.cut(buffer.len % 8)
       else:
+        buffer.tofile(f_write)
         buffer = bs.Bits(bin='0b')
 
     if len(_bytes) < 1000: break
     #print(_bytes)
     _bytes = f_read.read(1000)
     
-  
+  buffer.tofile(f_write)
+
   end = time.time()
   print('Demorou: {} segundos'.format(end - start))
   print(buffer)
+
+  return bs.Bits(int= buffer.len % 8, length= 4)
 
 def make_canonic (list_symbols, lenghts):
   canonic_code = []
