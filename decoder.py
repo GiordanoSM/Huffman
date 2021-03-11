@@ -1,20 +1,21 @@
 import bitstring as bs
 import tree as tr
 import time
+import sys
 
-def main():
+def main(_dir=''):
   file_name = input('Write your file name: ')
 
   try:
-    bits_header = bs.Bits(filename= 'arquivos/' + file_name, length= 8)
+    bits_header = bs.Bits(filename= file_name, length= 8)
 
     padding = check_header(bits_header)
 
-    _list = bs.Bits(filename= 'arquivos/' + file_name, offset= 8,  length= 256)
+    _list = bs.Bits(filename= file_name, offset= 8,  length= 256)
 
     list_symbols = get_symbols(_list)
 
-    bits_lengths = bs.Bits(filename= 'arquivos/' + file_name, offset= 264, length= len(list_symbols)*8)
+    bits_lengths = bs.Bits(filename= file_name, offset= 264, length= len(list_symbols)*8)
 
     lengths = get_lengths(bits_lengths)
 
@@ -22,9 +23,13 @@ def main():
 
     print(code)
 
-    file_bin = bs.Bits(filename= 'arquivos/' + file_name, offset= 264 + len(list_symbols)*8) #Isso nao traz pra memoria
+    file_bin = bs.Bits(filename= file_name, offset= 264 + len(list_symbols)*8) #Isso nao traz pra memoria
 
-    f_write = open('results/' + file_name[:-2], 'wb')
+    if _dir:
+      file_name = file_name.split('\\')[-1].split('/')[-1]
+      f_write = open(_dir + '/' + file_name[:-4], 'wb')
+    else:
+      f_write = open(file_name[:-4], 'wb')
 
     decode(file_bin, f_write, code, tree, padding)
 
@@ -97,4 +102,6 @@ def decode (file_bin, f_write, code, tree, padding):
   print('Demorou: {} segundos'.format(time_end - time_start))
 
 if __name__ == "__main__":
-  main()
+  if len(sys.argv) > 1:
+    main(sys.argv[1])
+  else: main()

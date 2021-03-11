@@ -1,12 +1,13 @@
 import bitstring as bs
 import tree as tr
 import time
+import sys
 
-def main():
+def main(_dir=''):
   file_name = input('Write your file name: ')
 
   try:
-    f = open('arquivos/' + file_name, 'rb')
+    f = open(file_name, 'rb')
     symbols, n_bytes = get_prob(f)
   
   except OSError as ose:
@@ -37,13 +38,16 @@ def main():
   #print(map(lambda x: 255 - x, bs.Bits('0b100').findall('0b1', bytealigned=True)))
 
   try:
-    f_write = open('arquivos/' + file_name + '.b', 'wb')
+    if _dir:
+      file_name = file_name.split('\\')[-1].split('/')[-1]
+      f_write = open(_dir + '/' + file_name + '.bin', 'wb')
+    else: f_write = open(file_name + '.bin', 'wb')
 
     f_write.write(header.tobytes())
     f_write.write(symbols_being.tobytes())
     f_write.write(lengths)
 
-    f_read_bits = bs.Bits(filename= 'arquivos/' + file_name)
+    f_read_bits = bs.Bits(filename= file_name)
 
     padding = write_code(f_read_bits, f_write, code) #Texto codificado
 
@@ -125,9 +129,7 @@ def write_code (f_read_bits, f_write, code):
   start = time.time()
   buffer = bs.Bits(bin='0b')
   cur_position = 0
-  #_bytes = f_read.read(1000)
-  #print(_bytes)
-  print('Code used: {}'.format(code))
+  #print('Code used: {}'.format(code))
   print('Enconding... (this may take a while)')
 
 
@@ -150,4 +152,6 @@ def write_code (f_read_bits, f_write, code):
   return bs.Bits(int= 8 % (buffer.len % 8), length= 4)
 
 if __name__ == "__main__":
-  main()
+  if len(sys.argv) > 1:
+    main(sys.argv[1])
+  else: main()
