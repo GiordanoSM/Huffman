@@ -65,8 +65,5 @@ def make_tree_code (list_symbols, lengths):
     tree_code.append(node.value)
     node.close_node()
     
-  #print(lengths)
-  #print(canonic_code)
-  #if root.used: print('Sucesso')
 
-  return {key: value for key, value in zip(list_symbols, tree_code)}
+  return {key: value for key, value in zip(list_symbols, tree_code)}, root

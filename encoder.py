@@ -25,7 +25,7 @@ def main():
 
   symbols_being = bs.Bits(length= 256)
 
-  code = tr.make_tree_code(code.keys(), lengths)
+  code, tree = tr.make_tree_code(code.keys(), lengths)
 
   for s in code:
     mask = bs.Bits(uint= 1, length= 256) << int.from_bytes(s, byteorder='big')

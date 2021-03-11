@@ -18,13 +18,15 @@ def main():
 
     lengths = get_lengths(bits_lengths)
 
-    code = tr.make_tree_code (list_symbols, lengths)
+    code, tree = tr.make_tree_code (list_symbols, lengths)
+
+    print(code)
 
     file_bin = bs.Bits(filename= 'arquivos/' + file_name, offset= 264 + len(list_symbols)*8) #Isso nao traz pra memoria
 
     f_write = open('results/' + file_name[:-2], 'wb')
 
-    decode(file_bin, f_write, code, padding)
+    decode(file_bin, f_write, code, tree, padding)
 
   except WrongHeader:
     print('Header do arquivo não condiz com o esperado.')
@@ -70,19 +72,26 @@ def get_lengths(bits_lengths):
 
 #-----------------------------------------------------------------------------------------
 
-def decode (file_bin, f_write, code, padding):
-  current = 0
+def decode (file_bin, f_write, code, tree, padding):
   end = file_bin.len - padding
-
-  print('Deconding... (this may take a while)')
+  #print(file_bin.bin)
+  print('Decoding... (this may take a while)')
   time_start = time.time()
 
-  while current < end:
-    print('Current: {}, End: {}'.format(current, end))
-    for key, value in code.items():
-      if file_bin.startswith(value, start= current, end= end):
-        f_write.write(key)
-        current += value.len
+  inv_dict_code = {_code: symbol for symbol, _code in code.items()}
+
+  node = tree
+
+  for i in range(end):
+    if file_bin[i]:
+        node = node.r_node
+    else: node = node.l_node
+
+    if not node.have_children:
+      f_write.write(inv_dict_code[node.value])
+      node = tree
+
+    #print("{}, {}".format(node.value, i))
 
   time_end = time.time()
   print('Demorou: {} segundos'.format(time_end - time_start))
