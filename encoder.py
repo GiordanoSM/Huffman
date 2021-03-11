@@ -33,7 +33,7 @@ def main():
 
   #print(symbols_being.bin)
   print('Número de símbolos: {}'.format(len(lengths)))
-  print('Probabilidades: {}'.format(symbols))
+  #print('Probabilidades: {}'.format(symbols))
   #print(map(lambda x: 255 - x, bs.Bits('0b100').findall('0b1', bytealigned=True)))
 
   try:
@@ -60,6 +60,7 @@ def main():
 
   #print(len(code), len(symbols))
   print('Tamanho do original em bytes: {}'.format(n_bytes))
+  #print(padding)
 
 #--------------------------------------------------------------------
 
@@ -141,13 +142,12 @@ def write_code (f_read_bits, f_write, code):
     cur_position += 8
     byte = f_read_bits[cur_position: cur_position + 8].tobytes()
 
-  buffer.tofile(f_write)  
+  buffer.tofile(f_write)
 
   end = time.time()
   print('Demorou: {} segundos'.format(end - start))
-  #print(buffer)
 
-  return bs.Bits(int= buffer.len % 8, length= 4)
+  return bs.Bits(int= 8 % (buffer.len % 8), length= 4)
 
 if __name__ == "__main__":
   main()
