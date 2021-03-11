@@ -38,22 +38,23 @@ def main():
 
   try:
     f_write = open('arquivos/' + file_name + '.b', 'wb')
-    f_read = open('arquivos/' + file_name, 'rb')
 
     f_write.write(header.tobytes())
     f_write.write(symbols_being.tobytes())
     f_write.write(lengths)
 
-    padding = write_code(f_read, f_write, code) #Texto codificado
+    f_read_bits = bs.Bits(filename= 'arquivos/' + file_name)
 
-    print('Header: {}'.format((header[:4] + padding).tobytes()))
+    padding = write_code(f_read_bits, f_write, code) #Texto codificado
+
+    #print('Header: {}'.format((header[:4] + padding).tobytes()))
 
     f_write.seek(0)
     f_write.write((header[:4] + padding).tobytes()) #Insere a quantidade final de padding no cabeçalho
 
   finally:
     f_write.close()
-    f_read.close()
+    #f_read.close()
 
   #compress_info()
 
@@ -117,33 +118,30 @@ def create_code(symbols):
 
 #------------------------------------------------------------------
 
-def write_code (f_read, f_write, code):
+def write_code (f_read_bits, f_write, code):
 
 
   start = time.time()
   buffer = bs.Bits(bin='0b')
-  _bytes = f_read.read(1000)
+  cur_position = 0
+  #_bytes = f_read.read(1000)
   #print(_bytes)
   print('Code used: {}'.format(code))
   print('Enconding... (this may take a while)')
 
-  while _bytes:
-    for b in _bytes:
-      #print (b)
-      buffer = buffer + code[b.to_bytes(1,byteorder= 'big')]
-    if buffer.len >= 8000: # 1000 bytes
-      if buffer.len % 8 != 0:
-        f_write.write(buffer.tobytes()[:-1])
-        buffer = bs.Bits(bin='0b') + buffer.cut(buffer.len % 8)
-      else:
-        buffer.tofile(f_write)
-        buffer = bs.Bits(bin='0b')
 
-    if len(_bytes) < 1000: break
-    #print(_bytes)
-    _bytes = f_read.read(1000)
-    
-  buffer.tofile(f_write)
+  byte = f_read_bits[cur_position: cur_position + 8].tobytes()
+
+  while byte:
+    buffer += code[byte]
+    if buffer.len % 8 == 0:
+      buffer.tofile(f_write)
+      buffer = bs.Bits(bin='0b')
+
+    cur_position += 8
+    byte = f_read_bits[cur_position: cur_position + 8].tobytes()
+
+  buffer.tofile(f_write)  
 
   end = time.time()
   print('Demorou: {} segundos'.format(end - start))
