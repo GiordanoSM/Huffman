@@ -21,7 +21,7 @@ def main(_dir=''):
 
     code, tree = tr.make_tree_code (list_symbols, lengths)
 
-    print(code)
+    #print(code)
 
     file_bin = bs.Bits(filename= file_name, offset= 264 + len(list_symbols)*8) #Isso nao traz pra memoria
 
