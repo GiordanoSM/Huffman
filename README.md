@@ -1,9 +1,9 @@
 # Informações
-Autor: Giordano Süffert Monteiro
+***Autor:** Giordano Süffert Monteiro
 
-Versão Python: 3.7.1
+**Versão Python:** 3.7.1
 
-Executado pela linha de comando
+**Executado pela linha de comando**
 
 # Execução de encoder.py
 
@@ -13,7 +13,7 @@ Possível passagem de parâmetro na hora de execução indicando o nome da pasta
 
 Será pedido o nome do arquivo a ser codificado. Incluir o caminho até ele a partir do diretório atual.
 
-Exemplo:
+**Exemplo:**
   >python3 encoder.py bin
 
   >Write your file name: arquivos/fonte0.txt
@@ -22,7 +22,7 @@ Exemplo:
 
 O arquivo resultante terá o mesmo nome do arquivo lido, e estará ou no mesmo diretório que ele, ou em outro caso tenha sido especificado na chamada do programa.
 
-Exemplo: *bin/fonte0.txt.bin*
+**Exemplo:** *bin/fonte0.txt.bin*
 
 ## Obs:
 
@@ -36,7 +36,7 @@ Possível passagem de parâmetro na hora de execução indicando o nome da pasta
 
 Será pedido o nome do arquivo a ser decodificado. Incluir o caminho até ele a partir do diretório atual.
 
-Exemplo:
+**Exemplo:**
 
   >python3 decoder.py results
 
@@ -46,7 +46,7 @@ Exemplo:
 
 O arquivo resultante terá o mesmo nome do arquivo lido, retirando as últimas 4 letras (tirando o .bin) e estará ou no mesmo diretório que ele, ou em outro caso tenha sido especificado na chamada do programa.
 
-Exemplo: *results/fonte0.txt*
+**Exemplo:** *results/fonte0.txt*
 
 ## Obs:
 
