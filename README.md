@@ -1,6 +1,8 @@
 # Informações
 Autor: Giordano Süffert Monteiro
+
 Versão Python: 3.7.1
+
 Executado pela linha de comando
 
 # Execução de encoder.py
