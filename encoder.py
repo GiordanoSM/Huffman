@@ -62,6 +62,8 @@ def main(_dir=''):
 
   print('Tamanho do arquivo original em bytes: {}'.format(n_bytes))
   print('Tamanho do arquivo comprimido em bytes: {}'.format(os.path.getsize(file_n)))
+  #print(code)
+  #print(bs.Bits(filename= file_n).bin, padding)
 
 #--------------------------------------------------------------------
 #Gera um dicionário com os símbolos e suas probabilidades
@@ -145,11 +147,17 @@ def write_code (f_read_bits, f_write, code):
 
   buffer.tofile(f_write) #Coloca o resto do código gerado no arquivo
 
+  #print(buffer, buffer.len)
+
   end = time.time()
   print('Demorou: {} segundos'.format(end - start))
 
   #Retorna o padding utilizado na última adição ao arquivo
-  return bs.Bits(int= 8 % (buffer.len % 8), length= 4)
+  if buffer.len % 8 == 0:
+    padding = 0
+  else: padding = 8 - (buffer.len % 8)
+
+  return bs.Bits(int= padding, length= 4)
 
 if __name__ == "__main__":
   #Aceita argumento com o diretório
