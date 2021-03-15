@@ -13,18 +13,18 @@ Será pedido o nome do arquivo a ser codificado. Incluir o caminho até ele a pa
 
 Exemplo:
   >python3 encoder.py bin
+
   >Write your file name: arquivos/fonte0.txt
 
 ## Resultado
 
 O arquivo resultante terá o mesmo nome do arquivo lido, e estará ou no mesmo diretório que ele, ou em outro caso tenha sido especificado na chamada do programa.
 
-Exemplo: 
-  bin/fonte0.txt.bin
+Exemplo: *bin/fonte0.txt.bin*
 
 ## Obs:
 
-Não trata casos de exceção como (FileNotFound). Ocorrerá a exceção padrão da linguagem.
+Não trata casos de exceção (ex: FileNotFound). Ocorrerá o tratamento padrão da linguagem.
 
 # Execução de decoder.py
 
@@ -35,16 +35,17 @@ Possível passagem de parâmetro na hora de execução indicando o nome da pasta
 Será pedido o nome do arquivo a ser decodificado. Incluir o caminho até ele a partir do diretório atual.
 
 Exemplo:
+
   >python3 decoder.py results
+
   >Write your file name: bin/fonte0.txt.bin
 
 ## Resultado
 
 O arquivo resultante terá o mesmo nome do arquivo lido, retirando as últimas 4 letras (tirando o .bin) e estará ou no mesmo diretório que ele, ou em outro caso tenha sido especificado na chamada do programa.
 
-Exemplo: 
-  results/fonte0.txt
+Exemplo: *results/fonte0.txt*
 
 ## Obs:
 
-Não trata casos de exceção como (FileNotFound). Ocorrerá a exceção padrão da linguagem.
+Não trata casos de exceção (ex: FileNotFound). Ocorrerá o tratamento padrão da linguagem.
