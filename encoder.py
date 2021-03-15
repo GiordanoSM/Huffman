@@ -3,6 +3,7 @@ import tree as tr
 import time
 import sys
 import os
+import math as mt
 
 def main(_dir=''):
   file_name = input('Write your file name: ')
@@ -58,12 +59,11 @@ def main(_dir=''):
   finally:
     f_write.close()
 
-  #compress_info()
-
   print('Tamanho do arquivo original em bytes: {}'.format(n_bytes))
   print('Tamanho do arquivo comprimido em bytes: {}'.format(os.path.getsize(file_n)))
-  #print(code)
-  #print(bs.Bits(filename= file_n).bin, padding)
+  print('Entropia de primeira ordem: {:.4f}'.format(sum([-x*mt.log2(x) for x in symbols.values()])))
+  print('Comprimento médio do código: {:.4f}'.format(sum([code[x].len*symbols[x] for x in code.keys()])))
+  print('Sucesso!')
 
 #--------------------------------------------------------------------
 #Gera um dicionário com os símbolos e suas probabilidades
@@ -146,8 +146,6 @@ def write_code (f_read_bits, f_write, code):
     byte = f_read_bits[cur_position: cur_position + 8].tobytes()
 
   buffer.tofile(f_write) #Coloca o resto do código gerado no arquivo
-
-  #print(buffer, buffer.len)
 
   end = time.time()
   print('Demorou: {} segundos'.format(end - start))
