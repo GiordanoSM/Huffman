@@ -7,7 +7,7 @@ def main(_dir=''):
   file_name = input('Write your file name: ')
 
   try:
-    bits_header = bs.Bits(filename= file_name, length= 8) #Lê os 2 primeiros bytes do arquivo
+    bits_header = bs.Bits(filename= file_name, length= 8) #Lê o primeiro byte do arquivo
 
     padding = check_header(bits_header) #Retira as informações do header
 
@@ -25,8 +25,8 @@ def main(_dir=''):
 
     #Se tiver sido passado um diretório de destino específico
     if _dir:
-      file_name = file_name.split('\\')[-1].split('/')[-1]
-      f_write = open(_dir + '/' + file_name[:-4], 'wb')
+      file_n = file_name.split('\\')[-1].split('/')[-1]
+      f_write = open(_dir + '/' + file_n[:-4], 'wb')
 
     else:
       f_write = open(file_name[:-4], 'wb')
@@ -95,7 +95,7 @@ def decode (file_bin, f_write, code, tree, padding):
         node = node.r_node
     else: node = node.l_node
 
-    #Quando o nodo não tem filho, pega o código do nodo, escreve o símbolo correspondente no arquivo e volta para a raiz.
+    #Quando o nó não tem filho, pega o código do nó, escreve o símbolo correspondente no arquivo e volta para a raiz.
     if not node.have_children:
       f_write.write(inv_dict_code[node.value])
       node = tree

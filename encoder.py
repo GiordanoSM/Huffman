@@ -2,6 +2,7 @@ import bitstring as bs
 import tree as tr
 import time
 import sys
+import os
 
 def main(_dir=''):
   file_name = input('Write your file name: ')
@@ -18,7 +19,6 @@ def main(_dir=''):
   header = bs.Bits(hex='0xF0') #Header sendo F + numero de bits de padding no final do arquivo
 
   lengths = [value.len for key, value in sorted(code.items(),key= lambda x: x[0])] #Tamanhos dos códigos na ordem dos símbolos
-  lengths = b''.join(list(map(lambda x: x.to_bytes(1, byteorder= 'big'), lengths)))#?????
 
   symbols_being = bs.Bits(length= 256) #256bits para indicar quais dos 256 simbolos existem (1 se existe e 0 se não)
 
@@ -31,13 +31,18 @@ def main(_dir=''):
 
   print('Número de símbolos: {}'.format(len(lengths)))
 
+  lengths = b''.join(list(map(lambda x: x.to_bytes(1, byteorder= 'big'), lengths))) #Tamanhos dos códigos em bytes para ser escrito no arquivo
+
   try:
     #Se tiver sido passado um diretório de destino específico
     if _dir:
-      file_name = file_name.split('\\')[-1].split('/')[-1]
-      f_write = open(_dir + '/' + file_name + '.bin', 'wb') #Extensão .bin
+      file_n = file_name.split('\\')[-1].split('/')[-1]
+      f_write = open(_dir + '/' + file_n + '.bin', 'wb') #Extensão .bin
+      file_n = _dir + '/' + file_n + '.bin'
 
-    else: f_write = open(file_name + '.bin', 'wb')
+    else: 
+      f_write = open(file_name + '.bin', 'wb')
+      file_n = file_name + '.bin'
 
     f_write.write(header.tobytes()) #Escreve o header no arquivo (0xF0), poderiormente 0 será o tamanho do padding final
     f_write.write(symbols_being.tobytes()) #Escreve a sequência de existência dos símbolos
@@ -55,7 +60,8 @@ def main(_dir=''):
 
   #compress_info()
 
-  print('Tamanho do original em bytes: {}'.format(n_bytes))
+  print('Tamanho do arquivo original em bytes: {}'.format(n_bytes))
+  print('Tamanho do arquivo comprimido em bytes: {}'.format(os.path.getsize(file_n)))
 
 #--------------------------------------------------------------------
 #Gera um dicionário com os símbolos e suas probabilidades
